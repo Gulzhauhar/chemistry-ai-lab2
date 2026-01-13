@@ -1,83 +1,99 @@
 import streamlit as st
 
-# Бет баптаулары
-st.set_page_config(page_title="Organic Chemistry Simulator", layout="wide")
+# ⚙️ Бет баптаулары (обязательно первым!)
+st.set_page_config(
+    page_title="Organic Chemistry Simulator",
+    layout="wide"
+)
 
-# Реакциялар деректер қоры
+# 🧪 Реакциялар деректер қоры
 reactions = {
     "Алкендердің сапалық реакциясы": {
         "reagents": "Этилен + Бром суы ($Br_2$)",
         "process": "Пробиркаға газ жіберіледі",
         "effect": "🟠 Қызғылт-сары түсті ерітінді біртіндеп ТҮССІЗДЕНЕДІ.",
-        "equation": "$CH_2=CH_2 + Br_2 \\rightarrow CH_2Br-CH_2Br$",
+        "equation": r"CH_2=CH_2 + Br_2 \rightarrow CH_2Br-CH_2Br",
         "type": "Газдың ерітіндімен әрекеттесуі"
     },
     "Альдегидтерге сапалық реакция (Күміс айна)": {
         "reagents": "Формальдегид + $[Ag(NH_3)_2]OH$",
         "process": "Су моншасында қыздыру",
         "effect": "🪞 Пробирка қабырғасында ЖЫЛТЫР КҮМІС қабаты түзіледі.",
-        "equation": "$HCHO + 2[Ag(NH_3)_2]OH \\xrightarrow{t} HCOONH_4 + 2Ag \\downarrow + 3NH_3 + H_2O$",
+        "equation": r"HCHO + 2[Ag(NH_3)_2]OH \xrightarrow{t} HCOONH_4 + 2Ag \downarrow + 3NH_3 + H_2O",
         "type": "Тұнба (металл) түзілуі"
     },
     "Глюкозаны анықтау": {
         "reagents": "Глюкоза + $Cu(OH)_2$",
         "process": "Қыздыру",
-        "effect": "🟦 Көгілдір түс $\\rightarrow$ 🟨 Сары $\\rightarrow$ 🧱 КІРПІШ-ҚЫЗЫЛ тұнба.",
-        "equation": "$C_6H_{12}O_6 + 2Cu(OH)_2 \\xrightarrow{t} C_6H_{12}O_7 + Cu_2O \\downarrow + 2H_2O$",
+        "effect": "🟦 Көгілдір → 🟨 Сары → 🧱 КІРПІШ-ҚЫЗЫЛ тұнба.",
+        "equation": r"C_6H_{12}O_6 + 2Cu(OH)_2 \xrightarrow{t} C_6H_{12}O_7 + Cu_2O \downarrow + 2H_2O",
         "type": "Түстің және тұнбаның өзгеруі"
     },
     "Ақуызға биурет реакциясы": {
         "reagents": "Белок + $NaOH$ + $CuSO_4$",
         "process": "Бөлме температурасында араластыру",
-        "effect": "🟣 Ерітінді ашық КҮЛГІН (фиолетовый) түске боялады.",
-        "equation": "Пептидтік байланыс пен $Cu^{2+}$ ионының кешенді қосылысы",
+        "effect": "🟣 Ерітінді ашық КҮЛГІН түске боялады.",
+        "equation": "Пептидтік байланыс пен Cu²⁺ иондарының кешен түзуі",
         "type": "Ерітінді түсінің өзгеруі"
     },
     "Ацетилен алу": {
         "reagents": "Кальций карбиді ($CaC_2$) + Су ($H_2O$)",
         "process": "Тікелей қосу",
-        "effect": "🫧 Газдың (C2H2) қарқынды бөлінуі, пробирканың қызуы.",
-        "equation": "$CaC_2 + 2H_2O \\rightarrow C_2H_2 \\uparrow + Ca(OH)_2$",
+        "effect": "🫧 Ацетилен газының (C₂H₂) қарқынды бөлінуі.",
+        "equation": r"CaC_2 + 2H_2O \rightarrow C_2H_2 \uparrow + Ca(OH)_2",
         "type": "Газдың бөлінуі"
     }
 }
 
-# Интерфейс
-st.title("🧪 AI Virtual Organic Lab: Реакциялар Симуляторы")
+# 🖥️ Интерфейс
+st.title("🧪 AI Virtual Organic Lab: Реакциялар симуляторы")
 st.markdown("---")
 
-# Тәжірибені таңдау
-selected = st.sidebar.selectbox("Зертханалық жұмысты таңдаңыз:", list(reactions.keys()))
+# 🔽 Тәжірибені таңдау
+selected = st.sidebar.selectbox(
+    "Зертханалық жұмысты таңдаңыз:",
+    list(reactions.keys())
+)
 
-col1, col2 = st.columns([1, 1])
+col1, col2 = st.columns(2)
 
+# 🔬 Эксперимент
 with col1:
     st.header("🔬 Эксперимент барысы")
     st.write(f"**Реагенттер:** {reactions[selected]['reagents']}")
     st.write(f"**Әдісі:** {reactions[selected]['process']}")
-    
+
     if st.button("🧪 Реакцияны іске қосу"):
-        st.subheader("Нәтиже:")
+        st.subheader("Нәтиже")
         st.info(reactions[selected]['effect'])
-        
-        # Түстерге байланысты визуалды белгілер
+
         if "ТҮССІЗДЕНЕДІ" in reactions[selected]['effect']:
-            st.write("⚪ *Пробиркадағы сұйықтық мөлдір болды.*")
+            st.write("⚪ Пробиркадағы ерітінді мөлдір болды")
         elif "КҮЛГІН" in reactions[selected]['effect']:
-            st.markdown("<div style='background-color: #8A2BE2; padding: 20px; border-radius: 10px; text-align: center; color: white;'>Пробирка түсі: Күлгін</div>", unsafe_allow_html=True)
+            st.markdown(
+                "<div style='background:#8A2BE2;padding:20px;border-radius:10px;color:white;text-align:center;'>Күлгін түс</div>",
+                unsafe_allow_html=True
+            )
         elif "ҚЫЗЫЛ" in reactions[selected]['effect']:
-            st.markdown("<div style='background-color: #B22222; padding: 20px; border-radius: 10px; text-align: center; color: white;'>Тұнба түсі: Кірпіш-қызыл</div>", unsafe_allow_html=True)
-        
+            st.markdown(
+                "<div style='background:#B22222;padding:20px;border-radius:10px;color:white;text-align:center;'>Кірпіш-қызыл тұнба</div>",
+                unsafe_allow_html=True
+            )
+
         st.balloons()
 
+# 📘 Теория
 with col2:
     st.header("📝 Теориялық мәлімет")
     st.success(f"**Реакция түрі:** {reactions[selected]['type']}")
-    st.latex(reactions[selected]['equation'])
-    
+
+    if "\\" in reactions[selected]['equation']:
+        st.latex(reactions[selected]['equation'])
+    else:
+        st.markdown(reactions[selected]['equation'])
+
     st.markdown("---")
-    st.write("**Оқушыға тапсырма:**")
-    st.write("Осы реакцияның белгілерін дәптеріңізге жазып, теңдеуді теңестіріңіз.")
+    st.write("✍️ **Тапсырма:** реакция белгілерін жазып, теңдеуді теңестіріңіз.")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("© 2026 Химиялық Виртуалды Лаборатория")
+st.sidebar.caption("© 2026 Химиялық виртуалды лаборатория")
