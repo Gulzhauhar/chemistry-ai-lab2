@@ -1,71 +1,40 @@
-import streamlit as st
+from CAOS.dispatch import react
+from CAOS.structures.molecule import Molecule
 
-st.set_page_config(page_title="Органикалық реакциялар", layout="centered")
+# Определяем молекулы
+acid = Molecule(
+    {'a1': 'H', 'a2': 'H', 'a3': 'H', 'a4': 'O'},
+    {'b1': {'nodes': ('a1', 'a4'), 'order': 1},
+     'b2': {'nodes': ('a2', 'a4'), 'order': 1},
+     'b3': {'nodes': ('a3', 'a4'), 'order': 1}},
+    id='Hydronium'
+)
 
-st.title("🧪 Виртуалды химиялық лаборатория")
-st.subheader("10-сынып | Органикалық қосылыстарға тән реакциялар")
+base = Molecule(
+    {'a1': 'H', 'a2': 'O'},
+    {'b1': {'nodes': ('a1', 'a2'), 'order': 1}},
+    id='Hydroxide'
+)
 
-st.markdown("---")
+# Реакция
+products = react(acid, base)
+print(products)
+pip install retrochem
+from retrochem import RetroChem
 
-# Реакциялар базасы
-reactions = {
-    "Этилен + KMnO₄": {
-        "equation": "C₂H₄ + KMnO₄ → MnO₂↓ + диол",
-        "result": "🟤 Қоңыр тұнба (MnO₂)",
-        "color": "#8B4513",
-        "theory": "Қос байланыс бар екенін дәлелдейтін сапалық реакция."
-    },
-    "Альдегид + Tollens реактиві": {
-        "equation": "R–CHO + Ag₂O → R–COOH + 2Ag↓",
-        "result": "🪞 Күміс айна пайда болды",
-        "color": "#C0C0C0",
-        "theory": "Альдегидтердің тотығу реакциясы."
-    },
-    "Фенол + FeCl₃": {
-        "equation": "Фенол + FeCl₃ → Күлгін кешен",
-        "result": "🟣 Күлгін түсті ерітінді",
-        "color": "#800080",
-        "theory": "Фенолдарға тән сапалық реакция."
-    },
-    "Спирт + Na": {
-        "equation": "2ROH + 2Na → 2RONa + H₂↑",
-        "result": "🔵 Газ бөлінді (H₂)",
-        "color": "#87CEEB",
-        "theory": "Спирттердің белсенді металлмен әрекеттесуі."
-    }
+model = RetroChem()
+result = model.predict("CCO")  
+print(result)
+reaction_dict = {
+    "2H2 + O2 = 2H2O": {"temp": 570},
+    "H2 + Cl2 = 2HCl": {}
 }
 
-# Таңдау
-reaction = st.selectbox("Реакцияны таңдаңыз:", reactions.keys())
+def check_reaction(molecules):
+    for equation, data in reaction_dict.items():
+        reactants, products = equation.split("=")
+pip install chemics
+import chemics as cm
 
-if st.button("🔬 Реакцияны жүргізу"):
-    data = reactions[reaction]
-
-    st.markdown("### ⚗ Реакция теңдеуі")
-    st.latex(data["equation"])
-
-    st.markdown("### 🧫 Бақылау нәтижесі")
-    st.success(data["result"])
-
-    # Пробирка визуализациясы
-    st.markdown("### 🧪 Пробиркадағы көрініс")
-    st.markdown(
-        f"""
-        <div style="
-        width:120px;
-        height:260px;
-        border:3px solid black;
-        border-radius:0 0 25px 25px;
-        background: linear-gradient(to top, {data['color']} 45%, white 45%);
-        margin:auto;
-        ">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown("### 📘 Теориялық түсіндірме")
-    st.info(data["theory"])
-
-st.markdown("---")
-st.caption("Виртуалды лаборатория | Химия 10-сынып")
+eq = cm.ChemicalEquation('2 H2 + O2 -> 2 H2O')
+print(eq.balance)
